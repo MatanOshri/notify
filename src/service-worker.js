@@ -69,4 +69,17 @@ self.addEventListener('message', (event) => {
   }
 });
 
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : {};
+  const options = {
+    body: data.body || 'Default message body',
+    icon: '/icon.png',
+  };
+
+  event.waitUntil(
+    // eslint-disable-next-line no-restricted-globals
+    self.registration.showNotification(data.title || 'Default title', options)
+  );
+});
+
 // Any other custom service worker logic can go here.
