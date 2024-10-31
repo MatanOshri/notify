@@ -29,10 +29,8 @@ const App = () => {
 
   const triggerNotification = async () => {
     const registration = await navigator.serviceWorker.getRegistration();
-    console.log("in")
 
     if (registration && 'showNotification' in registration) {
-      console.log("show")
       registration.showNotification('Test Notification', {
         body: 'This is a test notification on mobile!',
         icon: '/icon.png',
