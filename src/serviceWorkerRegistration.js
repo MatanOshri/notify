@@ -56,6 +56,7 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      initializePushNotifications(registration)
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -134,4 +135,41 @@ export function unregister() {
         console.error(error.message);
       });
   }
+}
+
+async function initializePushNotifications(registration) {
+  try {
+      const vapidPublicKey = await getVapidPublicKey();
+      const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+
+      // Subscribe the client
+      const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey,
+      });
+
+      // Send subscription to backend to save
+      await fetch('https://notify-backend-1mc5.onrender.com/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(subscription),
+      });
+
+      console.log('Push subscription successful:', subscription);
+  } catch (error) {
+      console.error('Error subscribing to push notifications:', error);
+  }
+}
+
+// Helper function to convert VAPID key to Uint8Array
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
 }
