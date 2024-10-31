@@ -17,14 +17,6 @@ const App = () => {
         console.log('Notification permission denied');
       }
     });
-
-    if (Notification.permission === 'granted') {
-        interval = setInterval(() => {
-        triggerNotification();
-      }, 60000); // 60000 ms = 1 minute
-    }
-    
-    return () => clearInterval(interval);
   }, []);
 
   const triggerNotification = async () => {

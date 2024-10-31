@@ -137,9 +137,18 @@ export function unregister() {
   }
 }
 
+async function getVapidPublicKey() {
+  const response = await fetch('https://notify-backend-1mc5.onrender.com/vapidPublicKey');
+  const data = await response.json();
+  console.log(data)
+
+  return data.publicKey;
+}
+
 async function initializePushNotifications(registration) {
   try {
       const vapidPublicKey = await getVapidPublicKey();
+      console.log(vapidPublicKey)
       const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
       // Subscribe the client
