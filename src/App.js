@@ -21,7 +21,7 @@ const App = () => {
     if (Notification.permission === 'granted') {
         interval = setInterval(() => {
         triggerNotification();
-      }, 5000); // 60000 ms = 1 minute
+      }, 60000); // 60000 ms = 1 minute
     }
     
     return () => clearInterval(interval);

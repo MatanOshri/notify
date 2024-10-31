@@ -81,5 +81,4 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(data.title || 'Default title', options)
   );
 });
-
 // Any other custom service worker logic can go here.
